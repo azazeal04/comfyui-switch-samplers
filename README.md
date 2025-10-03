@@ -10,7 +10,7 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
 
 ## ✨ Features
 
-* **12+ Fully Working Sampler Nodes**
+* **2+ Fully Working Sampler Nodes**
 
   * Step Switch KSampler
   <img width="1587" height="955" alt="StepSwitchKSampler" src="https://github.com/user-attachments/assets/a4352b1f-10fa-4172-97ef-ef22501374b5" />
