@@ -4,7 +4,7 @@
 
 This custom node pack for **[ComfyUI](https://github.com/comfyanonymous/ComfyUI)** introduces advanced sampler and scheduler switching strategies. It allows users to dynamically change samplers, schedulers, models, VAEs, CFG scales, denoise values, and conditioning between stages of a generation.
 
-The pack is designed for both **same-family checkpoints** (e.g. SDXL variants) and **cross-family workflows** (e.g. SDXL → Flux → Qwen), with automatic latent bridging via VAE decode/encode.
+The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
 
 ---
 
@@ -13,32 +13,17 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants) a
 * **12+ Fully Working Sampler Nodes**
 
   * Step Switch KSampler
+  <img width="1587" height="955" alt="StepSwitchKSampler" src="https://github.com/user-attachments/assets/a4352b1f-10fa-4172-97ef-ef22501374b5" />
+
+  
   * MultiStep KSampler
-  * Stochastic Switch Sampler
-  * Frequency Switch Sampler
-  * Random Switch Sampler
-  * Conditional Switch Sampler
-  * Time-Based Switch Sampler
-  * Gradient Switch Sampler
-  * Pattern Switch Sampler
-  * Threshold Switch Sampler
-  * Adaptive Switch Sampler
-  * Sequential Switch Sampler
+ <img width="1592" height="1007" alt="MultiStepKSampler" src="https://github.com/user-attachments/assets/cc7cfffc-e322-4fa3-a32a-0c5d204c7f25" />
+
+    
+ 
 
 * **Upgraded Cross-Model Nodes**
-
-  * **CrossStepSwitchKSampler** → Two-stage sampler with optional second model/vae/text encoder. Perfect for workflows like *SDXL → Flux*.
-  * **CrossMultiStepKSampler** → Three-stage sampler with full control over models, VAEs, CFGs, denoise values, samplers, schedulers, and conditioning for each stage.
-
-* **Flexible Conditioning**
-
-  * Each stage can use its own **positive** and **negative** conditioning (from the correct text encoder for the model in that stage).
-  * Falls back to the previous stage if not connected.
-
-* **Latent Bridging**
-
-  * Automatically performs **VAE decode → encode** when switching between different model/vae pairs.
-  * Ensures compatibility when mixing architectures.
+Still to be added when tests are completed.
 
 ---
 
@@ -48,7 +33,7 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants) a
 
    ```bash
    cd ComfyUI/custom_nodes
-   git clone https://github.com/YOUR-USERNAME/comfyui-switch-samplers.git
+   git clone https://github.com/azazeal04/comfyui-switch-samplers.git
    ```
 
    Or manually place the folder inside `ComfyUI/custom_nodes`.
@@ -57,16 +42,14 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants) a
 
 3. The new nodes will appear under:
 
-   * **Sampling / Switch Samplers** (all original switching nodes)
-   * **Sampling / Cross Samplers** (the new cross-model nodes)
-
+   * **Azazeal / Switch Samplers** (all original switching nodes)
+   
 ---
 
 ## 🛠️ Usage
 
 * Connect a **Model**, **VAE**, **Conditioning** (positive/negative), and **Latent Image** into one of the switch nodes.
 * Select samplers, schedulers, step counts, CFG values, and denoise levels per stage.
-* For cross-model nodes, connect multiple **models/VAEs/conditionings** to chain different architectures in one workflow.
 * Outputs a new **LATENT** tensor for further processing or decoding.
 
 ---
@@ -79,22 +62,11 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants) a
 * **MultiStepKSampler**
   Run 3 consecutive sampler stages with different samplers, schedulers, and denoise values.
 
-* **CrossStepSwitchKSampler**
-  Run SDXL for the first half, then seamlessly switch to Flux with its own VAE and text encoder for final refinement.
-
-* **CrossMultiStepKSampler**
-  Run three different models in sequence, e.g.:
-
-  1. SDXL for base composition
-  2. Flux for style transfer
-  3. Qwen for final polish
-
 ---
 
 ## 📖 Node Categories
 
-* **Sampling / Switch Samplers** → All single-model switch strategies.
-* **Sampling / Cross Samplers** → Cross-model workflow samplers.
+* **Sampling / Switch Samplers** → Single-model switch strategies.
 
 ---
 
@@ -113,6 +85,3 @@ You are free to use, modify, and distribute it, with attribution.
 
 ---
 
-👉 That gives you a **clean GitHub README** that documents everything in the pack, including your two new upgraded nodes.
-
-Do you also want me to draft a **`pyproject.toml`** (for PyPI-style packaging) that matches this README?
