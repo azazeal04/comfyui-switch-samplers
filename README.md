@@ -66,7 +66,7 @@ Still to be added when tests are completed.
 
 ## 📖 Node Categories
 
-* **Sampling / Switch Samplers** → Single-model switch strategies.
+* **Azazeal / Switch Samplers** → Single-model switch strategies.
 
 ---
 
