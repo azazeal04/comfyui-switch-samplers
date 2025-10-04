@@ -10,7 +10,7 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
 
 ## ✨ Features
 
-* **2+ Fully Working Sampler Nodes**
+* **4 Fully Working Sampler Nodes**
 
   * Step Switch KSampler
   <img width="1587" height="955" alt="StepSwitchKSampler" src="https://github.com/user-attachments/assets/a4352b1f-10fa-4172-97ef-ef22501374b5" />
@@ -89,6 +89,10 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
   1. SDXL for base composition
   2. Flux for style transfer
   3. Qwen for final polish
+
+* **Important Note**
+  If you want to use Flux, Qwen or any other model on the StepSwitchKSampler and MultiStepKSampler nodes or as first models on the StepSwitchKSampler and MultiStepKSampler you will first need to encode the empty latent with SDXL VAE and then decode it with VAE of the     model you want to use before the Ksampler.
+  ![Screenshot_1834](https://github.com/user-attachments/assets/34b31971-da0d-4afb-8150-5063af919006)
 
 ---
 
