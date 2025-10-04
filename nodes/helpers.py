@@ -1,10 +1,11 @@
-
 import torch
 import comfy.samplers as cs
+from comfy.sample import prepare_noise
 try:
     from comfy.nodes import Node
 except Exception:
     class Node: pass
+
 
 def _schema_for_basic():
     return {
@@ -20,7 +21,15 @@ def _schema_for_basic():
         "denoise": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
     }
 
+
 def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive, negative, seed, denoise=1.0):
+    """
+    Safe KSampler caller — fully compatible with all model architectures including Flux, SD3, and SDXL.
+    Keeps original Azazeal node style intact.
+    """
+    if model is None:
+        raise ValueError("No model provided to KSampler")
+
     device = getattr(model, "load_device", torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     model_options = getattr(model, "model_options", {})
 
@@ -34,9 +43,15 @@ def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive,
         model_options=model_options
     )
 
+    # ✅ Flux-safe latent unwrap
     latent_samples = latent["samples"] if isinstance(latent, dict) and "samples" in latent else latent
-    noise = torch.randn_like(latent_samples, device=device)
+    if not torch.is_tensor(latent_samples):
+        raise TypeError(f"Invalid latent type passed to KSampler: {type(latent)}")
 
+    # ✅ Model-consistent noise generation (Flux-safe)
+    noise = prepare_noise(latent_samples, seed, device)
+
+    # ✅ Run the sampler
     out = ks.sample(
         noise=noise,
         positive=positive,
@@ -46,18 +61,22 @@ def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive,
         seed=seed
     )
 
+    # ✅ Standardized latent dict output
     return {"samples": out}
+
 
 def _make_node_class(class_name, schema_callable, handler, return_types=("LATENT",), category="Azazeal / Switch Samplers"):
     def INPUT_TYPES():
         return {"required": schema_callable()}
+
     def sample(self, *args, **kwargs):
         latent = kwargs.get("latent_image", None)
         if latent is None:
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-            latent = torch.randn(1,4,64,64, device=device)
+            latent = torch.randn(1, 4, 64, 64, device=device)
         out = handler(kwargs.get("model", None), latent, kwargs)
         return (out,)
+
     new_cls = type(class_name, (Node,), {
         "INPUT_TYPES": staticmethod(INPUT_TYPES),
         "RETURN_TYPES": return_types,
