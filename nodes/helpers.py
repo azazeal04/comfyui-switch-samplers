@@ -54,7 +54,7 @@ def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive,
     # --- IMPORTANT FIX ---
     # prepare_noise signature: prepare_noise(latent_image, seed, noise_inds=None, device='cpu')
     # We must pass device as a keyword argument, otherwise positional args will be misinterpreted.
-    noise = prepare_noise(latent_samples, seed, device=device)
+    noise = prepare_noise(latent_samples, seed, None, device)
 
     # Run the sampler
     out = ks.sample(
