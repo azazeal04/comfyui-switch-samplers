@@ -23,7 +23,25 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
  
 
 * **Upgraded Cross-Model Nodes**
-Still to be added when tests are completed.
+
+  * **CrossStepSwitchKSampler** → Two-stage sampler with optional second model/vae/text encoder. Perfect for workflows like *SDXL → Flux*.
+ <img width="1637" height="1275" alt="CrossStepSwitchKSampler" src="https://github.com/user-attachments/assets/07e04b99-4d55-4536-8805-d826526b64e6" />
+
+    
+  * **CrossMultiStepKSampler** → Three-stage sampler with full control over models, VAEs, CFGs, denoise values, samplers, schedulers, and conditioning for each stage.
+ <img width="1764" height="1686" alt="CrossMultiStepKSampler" src="https://github.com/user-attachments/assets/cf709a04-8796-4352-be3a-e5aa175f640c" />
+
+    
+
+* **Flexible Conditioning**
+
+  * Each stage can use its own **positive** and **negative** conditioning (from the correct text encoder for the model in that stage).
+  * Falls back to the previous stage if not connected.
+
+* **Latent Bridging**
+
+  * Automatically performs **VAE decode → encode** when switching between different model/vae pairs.
+  * Ensures compatibility when mixing architectures.
 
 ---
 
@@ -61,6 +79,16 @@ Still to be added when tests are completed.
 
 * **MultiStepKSampler**
   Run 3 consecutive sampler stages with different samplers, schedulers, and denoise values.
+
+* **CrossStepSwitchKSampler**
+  Run SDXL for the first half, then seamlessly switch to Flux with its own VAE and text encoder for final refinement.
+
+* **CrossMultiStepKSampler**
+  Run three different models in sequence, e.g.:
+
+  1. SDXL for base composition
+  2. Flux for style transfer
+  3. Qwen for final polish
 
 ---
 
