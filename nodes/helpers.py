@@ -25,7 +25,7 @@ def _schema_for_basic():
 def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive, negative, seed, denoise=1.0):
     """
     Safe KSampler caller — fully compatible with all model architectures including Flux, SD3, and SDXL.
-    Keeps original Azazeal node style intact.
+    Keeps original node style intact.
     """
     if model is None:
         raise ValueError("No model provided to KSampler")
@@ -43,15 +43,20 @@ def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive,
         model_options=model_options
     )
 
-    # ✅ Flux-safe latent unwrap
+    # Flux/SD-safe latent unwrap (accept either tensor or {"samples": tensor})
     latent_samples = latent["samples"] if isinstance(latent, dict) and "samples" in latent else latent
     if not torch.is_tensor(latent_samples):
         raise TypeError(f"Invalid latent type passed to KSampler: {type(latent)}")
 
-    # ✅ Model-consistent noise generation (Flux-safe)
-    noise = prepare_noise(latent_samples, seed, device)
+    # Ensure latent is on the model device and float
+    latent_samples = latent_samples.to(device).float()
 
-    # ✅ Run the sampler
+    # --- IMPORTANT FIX ---
+    # prepare_noise signature: prepare_noise(latent_image, seed, noise_inds=None, device='cpu')
+    # We must pass device as a keyword argument, otherwise positional args will be misinterpreted.
+    noise = prepare_noise(latent_samples, seed, device=device)
+
+    # Run the sampler
     out = ks.sample(
         noise=noise,
         positive=positive,
@@ -61,7 +66,7 @@ def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive,
         seed=seed
     )
 
-    # ✅ Standardized latent dict output
+    # Standardize returned format to {"samples": tensor}
     return {"samples": out}
 
 
