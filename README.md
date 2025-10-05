@@ -90,7 +90,10 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
   2. Flux for style transfer
   3. Qwen for final polish
 
-* **Very Special**
+---
+
+
+## 🎁 Very Special
   A very special THANK YOU to Afroman4peace for testing the nodes with Flux, Qwen Image and Wan models enabling me to correct the errors, could not have done it without him.
   He has really great models, go check them out on [CivitAI](https://civitai.com/user/Afroman4peace).
   Afoman4peace, again thank you very much for your help testing the nodes these past 2 days, I really could not have done it without your help.
