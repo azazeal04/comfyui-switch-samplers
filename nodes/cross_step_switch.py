@@ -1,3 +1,6 @@
+import torch
+import torch.nn.functional as F
+import comfy.model_management as mm
 import comfy.samplers as cs
 from .helpers import _call_ksampler, _make_node_class
 
@@ -30,23 +33,59 @@ def _cross_step_switch_handler(model, latent, kwargs):
     pos2 = kwargs.get("positive2", pos1)
     neg2 = kwargs.get("negative2", neg1)
 
-    out = _call_ksampler(m1, latent, switch_point, sampler_before, scheduler_before,
+    device = mm.get_torch_device()
+
+    # --- FIRST SAMPLING ---
+    out1 = _call_ksampler(m1, latent, switch_point, sampler_before, scheduler_before,
                          cfg_before, pos1, neg1, seed, denoise_before)
 
-    if m2 is not m1 and vae1 is not None and vae2 is not None:
-        latent_samples = out["samples"] if isinstance(out, dict) else out
-        img = vae1.decode(latent_samples)
-        latent_m2_samples = vae2.encode(img)
-        out = {"samples": latent_m2_samples}
-    else:
-        if not (isinstance(out, dict) and "samples" in out):
-            out = {"samples": out}
+# ---- Decode and re-encode between models ----
+    if vae1 is not None and vae2 is not None and vae1 != vae2:
+        img = vae1.decode(out1["samples"])
+        if img is None:
+            raise RuntimeError("VAE1 decode returned None — cannot continue switch.")
+        
+         # ensure tensor
+        img = img if torch.is_tensor(img) else torch.tensor(img)
 
+        # handle both 4D and 5D (video-like) outputs
+        if img.dim() == 5:
+            # merge temporal dimension for encoding into 2D vae
+            b, f, h, w, c = img.shape
+            img = img.view(b * f, h, w, c)
+        elif img.dim() == 3:
+            img = img.unsqueeze(0)
+
+        # convert NHWC → NCHW
+        if img.shape[-1] in (3, 1):
+            img = img.permute(0, 3, 1, 2)
+
+        # remove invalid zero dimensions
+        img = img[..., :max(1, img.shape[-2]), :max(1, img.shape[-1])]
+
+        # ensure dimensions are multiples of 8
+        h, w = img.shape[-2:]
+        h8, w8 = (max(8, (h // 8) * 8), max(8, (w // 8) * 8))
+        if (h, w) != (h8, w8):
+            img = F.interpolate(img, size=(h8, w8), mode="bilinear", align_corners=False)
+
+        # Convert NCHW → NHWC for encode()
+        img = img.permute(0, 2, 3, 1)
+
+        # Encode safely
+        try:
+            latent_m2_samples = vae2.encode(img)
+        except Exception as e:
+            raise RuntimeError(f"Cross-switch encode failed: {e}\nShape passed: {tuple(img.shape)}")
+    else:
+        latent_m2_samples = out1["samples"]
+        
+    # --- SECOND SAMPLING ---
     steps_after = max(total_steps - switch_point, 0)
     if steps_after > 0:
-        out = _call_ksampler(m2, out, steps_after, sampler_after, scheduler_after,
+        out2 = _call_ksampler(m2, {"samples": latent_m2_samples}, steps_after, sampler_after, scheduler_after,
                              cfg_after, pos2, neg2, seed + 1, denoise_after)
-    return out
+    return out2
 
 CrossStepSwitchKSampler = _make_node_class(
     "CrossStepSwitchKSampler",
