@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "comfy-switch-samplers"
-version = "0.1.1"
+version = "1.1.2"
 description = "Switch sampler nodes for ComfyUI"
 authors = [
   { name="Azazeal Creations" }
