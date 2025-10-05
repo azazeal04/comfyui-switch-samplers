@@ -90,9 +90,10 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
   2. Flux for style transfer
   3. Qwen for final polish
 
-* **Important Note**
-  If you want to use Flux, Qwen or any other model on the StepSwitchKSampler and MultiStepKSampler nodes or as first models on the StepSwitchKSampler and MultiStepKSampler you will first need to encode the empty latent with SDXL VAE and then decode it with VAE of the     model you want to use before the Ksampler.
-  ![Screenshot_1834](https://github.com/user-attachments/assets/34b31971-da0d-4afb-8150-5063af919006)
+* **Very Special**
+  A very special THANK YOU to Afroman4peace for testing the nodes with Flux, Qwen Image and Wan models enabling me to correct the errors, could not have done it without him.
+  He has really great models, go check them out on [CivitAI](https://civitai.com/user/Afroman4peace).
+  Afoman4peace, again thank you very much for your help testing the nodes these past 2 days, I really could not have done it without your help.
 
 ---
 
