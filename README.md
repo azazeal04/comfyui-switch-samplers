@@ -36,8 +36,7 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
 * **Flexible Conditioning**
 
   * Each stage can use its own **positive** and **negative** conditioning (from the correct text encoder for the model in that stage).
-  * Falls back to the previous stage if not connected.
-
+  
 * **Latent Bridging**
 
   * Automatically performs **VAE decode → encode** when switching between different model/vae pairs.
@@ -61,6 +60,13 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
 3. The new nodes will appear under:
 
    * **Azazeal / Switch Samplers** (all original switching nodes)
+
+              Or
+     
+* **Install from manager**
+
+  Search for comfyui-switch-samplers
+   
    
 ---
 
