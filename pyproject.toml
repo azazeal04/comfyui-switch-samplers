@@ -10,5 +10,5 @@ Repository = "https://github.com/azazeal04/comfyui-switch-samplers"
 
 [tool.comfy]
 PublisherId = "azazeal04"
-DisplayName = "Comfyui-Switch-Samplers"
+DisplayName = "comfyui-switch-samplers"
 Icon = ""
