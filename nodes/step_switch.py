@@ -41,23 +41,19 @@ def _step_switch_handler(model, latent, kwargs):
 StepSwitchKSampler = _make_node_class("StepSwitchKSampler", lambda: {
     "model1": ("MODEL",),
     "model2": ("MODEL",),
-
-    "switch_point": ("INT", {"default": 10, "min": 1}),
+    "positive": ("CONDITIONING",),
+    "negative": ("CONDITIONING",),
+    "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
     "total_steps": ("INT", {"default": 20, "min": 2}),
-
+    "switch_point": ("INT", {"default": 10, "min": 1}),
     "sampler_before": (tuple(cs.KSampler.SAMPLERS),),
     "sampler_after":  (tuple(cs.KSampler.SAMPLERS),),
-
     "scheduler_before": (tuple(cs.KSampler.SCHEDULERS),),
     "scheduler_after":  (tuple(cs.KSampler.SCHEDULERS),),
-
     "cfg_before": ("FLOAT", {"default": 7.5, "min": 0.0, "max": 20.0, "step": 0.1}),
     "cfg_after":  ("FLOAT", {"default": 7.5, "min": 0.0, "max": 20.0, "step": 0.1}),
-
     "denoise_before": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
     "denoise_after":  ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
-
-    "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
     "positive": ("CONDITIONING",),
     "negative": ("CONDITIONING",),
     "latent_image": ("LATENT",),

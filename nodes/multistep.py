@@ -52,28 +52,23 @@ MultiStepKSampler = _make_node_class("MultiStepKSampler", lambda: {
     "model1": ("MODEL",),
     "model2": ("MODEL",),
     "model3": ("MODEL",),
-
+    "positive": ("CONDITIONING",),
+    "negative": ("CONDITIONING",),
+    "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
     "steps_stage1": ("INT", {"default": 10, "min": 1}),
     "steps_stage2": ("INT", {"default": 10, "min": 1}),
     "steps_stage3": ("INT", {"default": 10, "min": 1}),
-    
     "sampler_stage1": (tuple(cs.KSampler.SAMPLERS),),
     "sampler_stage2": (tuple(cs.KSampler.SAMPLERS),),
     "sampler_stage3": (tuple(cs.KSampler.SAMPLERS),),
     "scheduler_stage1": (tuple(cs.KSampler.SCHEDULERS),),
     "scheduler_stage2": (tuple(cs.KSampler.SCHEDULERS),),
     "scheduler_stage3": (tuple(cs.KSampler.SCHEDULERS),),
-
     "cfg_stage1": ("FLOAT", {"default": 7.5, "min": 0.0, "max": 20.0, "step": 0.1}),
     "cfg_stage2": ("FLOAT", {"default": 7.5, "min": 0.0, "max": 20.0, "step": 0.1}),
     "cfg_stage3": ("FLOAT", {"default": 7.5, "min": 0.0, "max": 20.0, "step": 0.1}),
-
     "denoise_stage1": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
     "denoise_stage2": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
     "denoise_stage3": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
-
-    "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
-    "positive": ("CONDITIONING",),
-    "negative": ("CONDITIONING",),
     "latent_image": ("LATENT",),
 }, _multistep_handler)
