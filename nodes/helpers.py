@@ -149,57 +149,31 @@ def _call_ksampler(model, latent, steps, sampler_name, scheduler, cfg, positive,
         noise = csample.prepare_noise(latent_samples, seed)
 
     # --- NATIVE COMFYUI SAMPLER PATH (with built-in preview) ---
-    try:
+   
         # use Comfy's own node sampler for full preview support
-        ksampler_node = nodes.KSampler()
-        out = ksampler_node.sample(
-            model=model,
-            seed=seed,
-            steps=steps,
-            cfg=cfg,
-            sampler_name=sampler_name,
-            scheduler=scheduler,
-            positive=positive,
-            negative=negative,
-            latent_image={"samples": latent_samples},
-            denoise=denoise,
-        )
+    ksampler_node = nodes.KSampler()
+    out = ksampler_node.sample(
+        model=model,
+        seed=seed,
+        steps=steps,
+        cfg=cfg,
+        sampler_name=sampler_name,
+        scheduler=scheduler,
+        positive=positive,
+        negative=negative,
+        latent_image={"samples": latent_samples},
+        denoise=denoise,
+    )
 
-        # ✅ unwrap tuple → standardize to {"samples": tensor}
-        if isinstance(out, tuple) and len(out) > 0:
-            out = out[0]
-        if isinstance(out, torch.Tensor):
-            out = {"samples": out}
+    mm.throw_exception_if_processing_interrupted()
 
-        return out  # stop here to prevent double sampling
+    # Normalize output
+    if isinstance(out, tuple) and len(out) > 0:
+        out = out[0]
+    if isinstance(out, torch.Tensor):
+        out = {"samples": out}
 
-    except Exception as e:
-        print(f"[Switch Samplers: native KSampler unavailable, fallback to internal sampler] {e}")
-
-
-        # Fallback to manual comfy.sample if preview fails
-        samples = csample.sample(
-            model=model,
-            noise=noise,
-            steps=steps,
-            cfg=cfg,
-            sampler_name=sampler_name,
-            scheduler=scheduler,
-            positive=positive,
-            negative=negative,
-            latent_image=latent_samples,
-            denoise=denoise,
-            disable_noise=False,
-            start_step=None,
-            last_step=None,
-            force_full_denoise=False,
-            noise_mask=noise_mask,
-            callback=None,
-            disable_pbar=False,
-            seed=seed,
-        )
-
-    return {"samples": samples}
+    return out
 
 
 def _make_node_class(class_name, schema_callable, handler, return_types=("LATENT",), category="Azazeal / Switch Samplers"):
