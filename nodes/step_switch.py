@@ -54,7 +54,6 @@ StepSwitchKSampler = _make_node_class("StepSwitchKSampler", lambda: {
     "cfg_after":  ("FLOAT", {"default": 7.5, "min": 0.0, "max": 20.0, "step": 0.1}),
     "denoise_before": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
     "denoise_after":  ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
-    "positive": ("CONDITIONING",),
-    "negative": ("CONDITIONING",),
     "latent_image": ("LATENT",),
+
 }, _step_switch_handler)
