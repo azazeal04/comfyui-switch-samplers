@@ -13,11 +13,13 @@ The pack is designed for both **same-family checkpoints** (e.g. SDXL variants).
 * **4 Fully Working Sampler Nodes**
 
   * Step Switch KSampler
-  <img width="1587" height="955" alt="StepSwitchKSampler" src="https://github.com/user-attachments/assets/a4352b1f-10fa-4172-97ef-ef22501374b5" />
+ <img width="1424" height="904" alt="StepSwitchKSampler" src="https://github.com/user-attachments/assets/c779650e-a460-4d9b-b321-7d6e471e0649" />
+
 
   
   * MultiStep KSampler
- <img width="1592" height="1007" alt="MultiStepKSampler" src="https://github.com/user-attachments/assets/cc7cfffc-e322-4fa3-a32a-0c5d204c7f25" />
+ <img width="1492" height="1055" alt="MultiStepKSampler" src="https://github.com/user-attachments/assets/53a41831-e0fb-45ec-8c3f-5a7c36a08374" />
+
 
     
  
