@@ -1,13 +1,15 @@
-
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "comfy-switch-samplers"
-version = "1.1.2"
+name = "Comfy-Switch-Samplers"
 description = "Switch sampler nodes for ComfyUI"
-authors = [
-  { name="Azazeal Creations" }
-]
-license = "MIT"
+version = "1.1.3"
+license = {file = "LICENSE"}
+dependencies = [None]
+
+[project.urls]
+Repository = "https://github.com/azazeal04/comfyui-switch-samplers"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "azazeal04"
+DisplayName = "Comfyui-Switch-Samplers"
+Icon = ""
